@@ -1,0 +1,485 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <base target="_top">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <style>
+    /* ================================
+      共通
+    ================================ */
+    *,
+    *::before,
+    *::after {
+      box-sizing: border-box;
+    }
+    
+    body {
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+      background: #f9fafb;
+      padding: 20px;
+      font-size: 1rem;
+    }
+    
+    .page-container {
+      max-width: 100%;
+      margin: 0 auto;
+    }
+    
+    .page-container > * {
+      width: 100%;
+    }
+    
+    /* ================================
+      テーブルスクロール
+    ================================ */
+    .table-wrapper {
+      width: 100%;
+      max-height: 65vh;
+      overflow-y: auto;
+      overflow-x: hidden;
+    
+      background: white;
+      border-radius: 32px;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.08);
+    
+      -webkit-overflow-scrolling: touch;
+      margin-bottom: 16px;
+    }
+    
+    .table-wrapper table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+    
+    /* ヘッダー固定 */
+    .table-wrapper thead th {
+      position: sticky;
+      top: 0;
+      z-index: 5;
+      background: #f3f4f6;
+    }
+    
+    /* ================================
+      テーブル中身
+    ================================ */
+    th, td {
+      padding: 10px;
+      border-bottom: 1px solid #e5e7eb;
+      font-size: 0.9rem;
+    }
+    
+    /* 行 */
+    tr:hover {
+      background: #f3f4f6;
+      cursor: pointer;
+    }
+    
+    tr.selected {
+      background: #dbeafe;
+    }
+    
+    tr.working {
+      background: #fff7ed;
+    }
+    
+    tr.working:hover {
+      background: #ffedd5;
+    }
+    
+    /* ================================
+      入力・ボタン
+    ================================ */
+    input,
+    button,
+    a.button-link {
+      width: 100%;
+    }
+    
+    input, button {
+      padding: 10px;
+      margin-top: 8px;
+      border-radius: 10px;
+      font-size: 1rem;
+    }
+    
+    input {
+      border: 1px solid #d1d5db;
+    }
+    
+    button {
+      background: #2563eb;
+      color: white;
+      border: none;
+      cursor: pointer;
+    }
+    
+    button:disabled {
+      background: #93c5fd;
+    }
+    
+    /* ================================
+      チェックボックス
+    ================================ */
+    .checkbox {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-top: 12px;
+      font-size: 0.95rem;
+    }
+    
+    .checkbox input {
+      appearance: none;
+      width: 20px;
+      height: 20px;
+      border: 2px solid #cbd5e1;
+      border-radius: 6px;
+      background: #fff;
+      position: relative;
+    }
+    
+    .checkbox input:checked {
+      background: #3b82f6;
+      border-color: #3b82f6;
+    }
+    
+    .checkbox input:checked::after {
+      content: "";
+      position: absolute;
+      top: 2px;
+      left: 6px;
+      width: 5px;
+      height: 10px;
+      border: solid white;
+      border-width: 0 2px 2px 0;
+      transform: rotate(45deg);
+    }
+    
+    /* ================================
+      戻るリンク
+    ================================ */
+    a.button-link {
+      display: inline-block;
+      text-align: center;
+      padding: 10px;
+      margin-top: 10px;
+    
+      background: #2563eb;
+      color: white;
+      text-decoration: none;
+    
+      border-radius: 10px;
+      font-weight: 500;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.08);
+    }
+    
+    /* ================================
+      📱 スマホ（600px以下）
+    ================================ */
+    @media (max-width: 600px) {
+    
+      body {
+        padding: 30px;
+        font-size: 1rem;
+      }
+    
+      h2 {
+        font-size: 2rem;
+        margin-bottom: 30px;
+      }
+
+      h4 {
+        text-align: center;
+      }
+    
+      /* テーブル */
+      th, td {
+        padding: 14px;
+        border-bottom: 2px solid #e5e7eb;
+        font-size: 1rem;
+        white-space: nowrap;
+      }
+    
+      .table-wrapper {
+        max-height: 60vh;
+        box-shadow: 0 12px 30px rgba(0,0,0,0.1);
+    
+        overflow-x: auto; /* ← 横スクロールON */
+        border-radius: 10px;
+      }
+    
+      .table-wrapper table {
+        min-width: 800px; /* ← 横スクロール用 */
+      }
+    
+      /* 行 */
+      tr.working.selected {
+        background: #fed7aa;
+      }
+    
+      /* 入力 */
+      input {
+        padding: 16px;
+        margin-top: 10px;
+        border-radius: 10px;
+        font-size: 1rem;
+      }
+    
+      /* チェックボックス */
+      .checkbox {
+        gap: 28px;
+        margin-top: 20px;
+        font-size: 1rem;
+      }
+    
+      .checkbox input {
+        width: 24px;
+        height: 24px;
+        border: 3px solid #cbd5e1;
+        border-radius: 6px;
+      }
+    
+      .checkbox input:checked::after {
+        top: 8px;
+        left: 16px;
+        width: 12px;
+        height: 24px;
+        border-width: 0 4px 4px 0;
+      }
+    
+      /* ボタン */
+      button {
+        margin-top: 20px;
+        padding: 10px;
+        border-radius: 10px;
+        font-size: 1rem;
+        font-weight: 600;
+      }
+    
+      /* 結果 */
+      #result {
+        margin-top: 28px;
+        font-size: 1.2rem;
+      }
+    
+      /* リンク */
+      a.button-link {
+        display: block;
+        margin-top: 20px;
+        padding: 16px;
+        border-radius: 10px;
+        font-size: 1.5rem;
+        box-shadow: 0 8px 20px rgba(0,0,0,0.12);
+      }
+    
+      a.button-link:active {
+        transform: translateY(2px);
+      }
+    }
+  </style>
+</head>
+<body>
+
+<div class="page-container">
+<h2>編集</h2>
+<h4>（行をクリックして修正・ビューは30秒ごとに自動更新されます）</h4>
+<div class="table-wrapper">
+  <table id="table">
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>出発地点</th>
+        <th>備品名</th>
+        <th>目的地</th>
+        <th>数</th>
+        <th>備考</th>
+      </tr>
+    </thead>
+    <tbody></tbody>
+  </table>
+</div>
+
+<form id="myForm">
+  <input name="place" placeholder="出発地点">
+  <input name="item" placeholder="備品名">
+  <input name="toWhere" placeholder="目的地">
+  <input name="amount" type="number" placeholder="数">
+  <input name="note" placeholder="備考">
+  <label class="checkbox">
+    <input type="checkbox" name="working">
+    <span>業務中</span>
+  </label>
+  <label class="checkbox">
+    <input type="checkbox" name="sendEmail" disabled>
+    <span>【業務中がOnのとき】目的地担当者へ待機要請メールを送信。</span>
+  </label>
+</form>
+
+
+<button id="updateBtn" disabled>変更を確定</button>
+<p id="result">表を読み込み中……</p>
+
+<a href="https://sites.google.com/seiko.ac.jp/bihin-haifu-henshu/%E7%B7%A8%E9%9B%86%E3%83%9A%E3%83%BC%E3%82%B8" class="button-link">戻る</a>
+
+</div>
+
+<script>
+
+  const tbody = document.querySelector("tbody");
+  const place = document.getElementById("place");
+  const item = document.getElementById("item");
+  const destination = document.getElementById("destination");
+  const qty = document.getElementById("qty");
+  const note = document.getElementById("note");
+  const working = document.querySelector('input[name="working"]');
+  const emailCheck = document.querySelector('input[name="sendEmail"]');
+  const updateBtn = document.getElementById("updateBtn");
+  const result = document.getElementById("result");
+  const form = document.getElementById("myForm");
+
+  const API_URL = "https://script.google.com/macros/s/AKfycbx8ZJ_0Jdvx27AMGrTs19Wj3kTzS04sgNUOouAGKSV1_sGnLF1odVzBMzRXc2hGBQI/exec";
+
+  working.addEventListener("change", () => {
+    emailCheck.disabled = !working.checked;
+    if (!working.checked) emailCheck.checked = false;
+  });
+
+  let selectedRow = null;
+
+  const createTable = async () => {
+    
+    const res = await fetch(API_URL, {
+      method: "POST",
+      body: JSON.stringify({
+        action: "getIdList"
+      })
+    });
+    const data = await res.json();
+    if (data.status === "success") {
+      tbody.innerHTML = "";
+      if (!data.table || data.table.length === 0) return;
+  
+        data.table.forEach(row => {
+          if (!row[0]) return;
+  
+          const tr = document.createElement("tr");
+  
+          // 業務中判定（G列）
+          const isWorking =
+            row[6] === true ||
+            row[6] === "TRUE" ||
+            row[6] === "true";
+  
+          if (isWorking) tr.classList.add("working");
+  
+          // 表示列：A, C, D, E, F
+          const displayIndexes = [0, 2, 3, 4, 5, 7];
+          displayIndexes.forEach(i => {
+            const td = document.createElement("td");
+            td.textContent = row[i] ?? "";
+            tr.appendChild(td);
+          });
+  
+          tr.addEventListener("click", () => {
+            document.querySelectorAll("tr.selected")
+              .forEach(r => r.classList.remove("selected"));
+  
+            tr.classList.add("selected");
+            selectedRow = row;
+  
+            form.place.value = row[2];
+            form.item.value = row[3];
+            form.toWhere.value = row[4];
+            form.amount.value = row[5];
+            form.note.value = row[7];
+  
+            working.checked = isWorking;
+            updateBtn.disabled = false;
+            emailCheck.disabled = !working.checked;
+            if (!working.checked) emailCheck.checked = false;
+          });
+          tbody.appendChild(tr);
+        });
+      result.textContent = "";
+    }
+  };
+
+  createTable()
+  setInterval(createTable, 30000);
+
+  updateBtn.addEventListener("click", async () => {
+    if (!selectedRow) return;
+
+    updateBtn.disabled = true;
+    result.textContent = "更新中…";
+
+    const editData = async (sendEmail = false) => {
+      const res = await fetch(API_URL, {
+        method: "POST",
+        body: JSON.stringify({
+          action: "updateDataById",
+          id: selectedRow[0],
+          newValues: {
+            place: form.place.value,
+            item: form.item.value,
+            toWhere: form.toWhere.value,
+            amount: form.amount.value,
+            note: form.note.value,
+            working: working.checked
+          },
+          sendEmail: sendEmail
+        })
+      });
+      const data = await res.json();
+      if (data.status === "success") {
+        result.textContent = data.message;
+        form.reset();
+        tbody.innerHTML = "";
+        createTable();
+        
+      } else {
+        result.textContent = data.message;
+        updateBtn.disabled = false;
+      }
+    }
+    
+    // ===== メール確認が必要な場合 =====
+    if (emailCheck.checked) {
+      const res = await fetch(API_URL, {
+        method: "POST",
+        body: JSON.stringify({
+          action: "getManagerEmail",
+          place: form.toWhere.value
+        })
+      });
+      const data = await res.json();
+      if (data.status === "success") {
+        let ok;
+
+          if (data.email) {
+            ok = confirm(`編集を確定し、目的地担当者 ${data.email} に待機要請メールを送信します。よろしいですか？`);
+          } else {
+            ok = confirm("目的地担当者が見つからないため、メールを送信せずに編集を確定します。よろしいですか？");
+          }
+
+          if (ok) {
+            await editData(sendEmail = true);
+          } else {
+            updateBtn.disabled = false;
+          }
+      } else {
+        result.textContent = data.message;
+        updateBtn.disabled = false;
+      }
+      
+    } else {
+      // メール送信なし
+      await editData();
+    }
+  });
+</script>
+
+
+</body>
+</html>
