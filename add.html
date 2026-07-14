@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <base target="_top">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <style>
+    /* ===== 共通 ===== */
+    *,
+    *::before,
+    *::after {
+      box-sizing: border-box;
+    }
+    
+    /* ===== PC（デフォルト） ===== */
+    body {
+      font-family: system-ui, sans-serif;
+      background: #f9fafb;
+      padding: 20px;
+    }
+    
+    h2 {
+      text-align: center;
+    }
+    
+    form {
+      background: white;
+      padding: 20px;
+      border-radius: 14px;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.08);
+    }
+    
+    input, button, label {
+      width: 100%;
+      padding: 10px;
+      margin-top: 10px;
+      font-size: 1rem;
+    }
+    
+    button {
+      background: #2563eb;
+      color: white;
+      border: none;
+      border-radius: 10px;
+    }
+    
+    /* ===== チェックボックス ===== */
+    .checkbox {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-top: 6px;
+      font-size: 0.95rem;
+      color: #374151;
+      cursor: pointer;
+    }
+    
+    .checkbox input {
+      appearance: none;
+      -webkit-appearance: none;
+      width: 20px;
+      height: 20px;
+      border: 2px solid #cbd5e1;
+      border-radius: 6px;
+      background: #fff;
+      position: relative;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+    
+    .checkbox input:checked {
+      background: #3b82f6;
+      border-color: #3b82f6;
+    }
+    
+    .checkbox input:checked::after {
+      content: "";
+      position: absolute;
+      top: 2px;
+      left: 6px;
+      width: 5px;
+      height: 10px;
+      border: solid white;
+      border-width: 0 2px 2px 0;
+      transform: rotate(45deg);
+    }
+    
+    .checkbox input:focus {
+      outline: none;
+      box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.3);
+    }
+    
+    .checkbox input:active {
+      transform: scale(0.95);
+    }
+    
+    button:disabled {
+      background: #93c5fd;
+      cursor: not-allowed;
+    }
+    
+    button.loading {
+      background: #9ca3af;
+    }
+    
+    /* ===== ボタン風リンク ===== */
+    a.button-link {
+      display: inline-block;
+      width: 100%;
+      text-align: center;
+      padding: 10px;
+      margin-top: 10px;
+      background: #2563eb;
+      color: white;
+      text-decoration: none;
+      border-radius: 10px;
+      font-size: 1rem;
+      font-weight: 500;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.08);
+      transition: background 0.2s ease, transform 0.1s ease, box-shadow 0.1s ease;
+    }
+    
+    a.button-link:hover {
+      background: #1d4ed8;
+      box-shadow: 0 6px 14px rgba(0,0,0,0.12);
+    }
+    
+    a.button-link:active {
+      transform: translateY(1px);
+      box-shadow: 0 3px 6px rgba(0,0,0,0.08);
+    }
+    
+    a.button-link:focus {
+      outline: none;
+      box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.35);
+    }
+    
+    /* ===== スマホ用 ===== */
+    @media (max-width: 600px) {
+    
+      body {
+        padding: 30px;
+        font-size: 1rem;
+      }
+    
+      h2 {
+        font-size: 2rem;
+        margin-bottom: 30px;
+      }
+    
+      form {
+        padding: 40px;
+        border-radius: 32px;
+        box-shadow: 0 12px 30px rgba(0,0,0,0.1);
+        max-width: 900px;
+        margin: 0 auto;
+      }
+    
+      input {
+        padding: 16px;
+        margin-top: 12px;
+        font-size: 1rem;
+        border-radius: 12px;
+        border: 2px solid #d1d5db;
+      }
+    
+      .checkbox {
+        font-size: 0.8rem;
+      }
+    
+      .checkbox input {
+        width: 24px;
+        height: 24px;
+        border: 3px solid #cbd5e1;
+        border-radius: 6px;
+      }
+    
+      .checkbox input:checked::after {
+        top: 8px;
+        left: 16px;
+        width: 12px;
+        height: 24px;
+        border-width: 0 4px 4px 0;
+      }
+    
+      button {
+        margin-top: 20px;
+        padding: 17px;
+        border-radius: 18px;
+        font-size: 1.5rem;
+        font-weight: 600;
+      }
+    
+      #result {
+        text-align: center;
+        margin-top: 30px;
+        font-size: 1.2rem;
+      }
+    
+      a.button-link {
+        display: block;
+        max-width: 900px;
+        margin: 40px auto 0;
+        padding: 17px;
+        border-radius: 18px;
+        font-size: 1.5rem;
+        box-shadow: 0 8px 20px rgba(0,0,0,0.12);
+      }
+    
+      a.button-link:active {
+        transform: translateY(2px);
+      }
+    }
+    
+  </style>
+</head>
+<body>
+
+  <h2>追加フォーム</h2>
+
+  <form id="myForm">
+    <input name="place" placeholder="出発地点" required>
+    <input name="item" placeholder="備品名" required>
+    <input name="toWhere" placeholder="目的地" required>
+    <input name="amount" type="number" placeholder="数" min="1" required>
+    <input name="note" placeholder="備考（任意）">
+
+    <label class="checkbox">
+      <input type="checkbox" name="working" id="working">
+      <span>業務中</span>
+    </label>
+    <label class="checkbox">
+      <input type="checkbox" name="sendEmail" id="send" disabled>
+      <span>【業務中がOnのとき】目的地担当者へ待機要請メールを送信。</span>
+    </label>
+
+    <button type="submit" id="submitBtn">追加</button>
+  </form>
+
+  <p id="result"></p>
+
+  <a href="https://sites.google.com/seiko.ac.jp/bihin-haifu-henshu/%E7%B7%A8%E9%9B%86%E3%83%9A%E3%83%BC%E3%82%B8" class="button-link">戻る</a>
+
+<script>
+  const form = document.getElementById("myForm");
+  const result = document.getElementById("result");
+  const submitBtn = document.getElementById("submitBtn");
+  const workingCheck = document.getElementById("working");
+  const emailCheck = document.getElementById("send");
+  
+  const API_URL = "https://script.google.com/macros/s/AKfycbx8ZJ_0Jdvx27AMGrTs19Wj3kTzS04sgNUOouAGKSV1_sGnLF1odVzBMzRXc2hGBQI/exec";
+  
+  workingCheck.addEventListener("change", () => {
+    emailCheck.disabled = !workingCheck.checked;
+    if (!workingCheck.checked) emailCheck.checked = false;
+  });
+  
+  form.addEventListener("submit", async (e) => {
+    e.preventDefault();
+  
+    submitBtn.disabled = true;
+    submitBtn.textContent = "送信中…";
+    submitBtn.classList.add("loading");
+    result.textContent = "";
+  
+    // ===== データ送信関数 =====
+    const sendData = async (sendEmail=false) => {
+      const res = await fetch(API_URL, {
+        method: "POST",
+        body: JSON.stringify({
+          action: "submit",
+          data: {
+            place: form.place.value,
+            item: form.item.value,
+            toWhere: form.toWhere.value,
+            amount: form.amount.value,
+            working: form.working.checked,
+            note: form.note.value
+          },
+          sendEmail: sendEmail
+        })
+      });
+      const data = await res.json();
+  
+      if (data.status === "sent") {
+        result.textContent = "担当者にメールを送信し、データを追加しました。";
+      } else if (data.status === "success") {
+        result.textContent = "追加しました。";
+      } else {
+        result.textContent = data.message || "エラー";
+      }
+  
+      form.reset();
+      submitBtn.disabled = false;
+      submitBtn.textContent = "追加";
+      submitBtn.classList.remove("loading");
+    };
+
+  
+    // ===== メール確認 =====
+    if (form.sendEmail.checked) {
+      const res = await fetch(API_URL, {
+        method: "POST",
+        body: JSON.stringify({
+          action: "getManagerEmail",
+          place: form.toWhere.value
+        })
+      });
+  
+      const data = await res.json();
+  
+      if (data.status === "success") {
+        let ok;
+  
+        if (data.email) {
+          ok = confirm(`データを追加し、目的地担当者 ${data.email} にメールを送信します。よろしいですか？`);
+        } else {
+          ok = confirm("担当者が見つからないため、メールなしで追加します。よろしいですか？");
+        }
+  
+        if (ok) {
+          await sendData(true);
+        } else {
+          submitBtn.disabled = false;
+          submitBtn.textContent = "追加";
+          submitBtn.classList.remove("loading");
+        }
+  
+      } else {
+        result.textContent = "メール取得エラー";
+      }
+  
+    } else {
+      await sendData(false);
+    }
+  });
+  
+</script>
+</body>
+</html>
